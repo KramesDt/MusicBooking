@@ -11,13 +11,16 @@ const Artist = require("../models/artist.model");
 const createEvent = async (req, res) => {
   try {
     const artist = await Artist.findById(req.body.artist);
-    if (!artist) return res.status(400).send("Artist not found");
+    if (!artist) {
+      return res.status(400).json({ message: "Artist not found" });
+    }
 
     const event = new Event(req.body);
     await event.save();
-    res.status(201).send(event);
-  } catch (error) {
-    res.status(400).send(error);
+    res.status(201).json(event);
+  } catch (err) {
+    console.error("Create event error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -29,9 +32,10 @@ const createEvent = async (req, res) => {
 const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find().populate("artist", "name genre");
-    res.send(events);
-  } catch (error) {
-    res.status(500).send(error);
+    res.json(events);
+  } catch (err) {
+    console.error("Get all events error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -43,10 +47,13 @@ const getAllEvents = async (req, res) => {
 const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate("artist");
-    if (!event) return res.status(404).send();
-    res.send(event);
-  } catch (error) {
-    res.status(500).send(error);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json(event);
+  } catch (err) {
+    console.error("Get event error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -60,10 +67,13 @@ const updateEvent = async (req, res) => {
     const event = await Event.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!event) return res.status(404).send();
-    res.send(event);
-  } catch (error) {
-    res.status(400).send(error);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json(event);
+  } catch (err) {
+    console.error("Update event error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -79,10 +89,13 @@ const updateEventStatus = async (req, res) => {
       { status: req.body.status },
       { new: true }
     );
-    if (!event) return res.status(404).send();
-    res.send(event);
-  } catch (error) {
-    res.status(400).send(error);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json(event);
+  } catch (err) {
+    console.error("Update status error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -94,18 +107,21 @@ const updateEventStatus = async (req, res) => {
 const deleteEvent = async (req, res) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
-    if (!event) return res.status(404).send();
-    res.send(event);
-  } catch (error) {
-    res.status(500).send(error);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+    res.json({ message: "Event deleted successfully" });
+  } catch (err) {
+    console.error("Delete event error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 module.exports = {
-    createEvent,
-    getAllEvents,
-    getEventById,
-    updateEvent,
-    updateEventStatus,
-    deleteEvent
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  updateEventStatus,
+  deleteEvent,
 };
