@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/default');
-const Artist = require('../models/artist.model.js');
+const User = require('../models/user.model.js');
 
 /**
  * Authentication middleware to verify JWT token
@@ -24,19 +24,19 @@ const auth = async (req, res, next) => {
     // Verify token
     const decoded = jwt.verify(token, config.jwtSecret);
 
-    // Find artist by id
-    const artist = await Artist.findById(decoded.artist.id).select('-password');
+    // Find user by id
+    const user = await User.findById(decoded.user.id).select('-password');
     
-    if (!artist) {
+    if (!user) {
       return res.status(401).json({ message: 'Token is not valid' });
     }
 
-    if (!artist.isActive) {
+    if (!user.isActive) {
       return res.status(401).json({ message: 'Account is not active' });
     }
 
-    // Add artist to request
-    req.artist = artist;
+    // Add user to request
+    req.user = user;
     next();
   } catch (err) {
     console.error('Auth middleware error:', err);

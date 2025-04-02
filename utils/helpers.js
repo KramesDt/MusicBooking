@@ -9,7 +9,7 @@ const config = require('../config/default');
  */
 const generateToken = (user) => {
   return jwt.sign(
-    { user: { id: user.id } },
+    { user: { id: user._id } },
     config.jwtSecret,
     { expiresIn: config.jwtExpiration }
   );
