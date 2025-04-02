@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const User = require('../models/User');
+const Artist = require('../models/artist.model.js');
+require('dotenv').config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_change_in_production';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+const JWT_SECRET = process.env.JWT_SECRET ;
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
 // Generate JWT token
 exports.generateToken = (userId) => {
@@ -32,17 +33,17 @@ exports.protect = async (req, res, next) => {
     // Verify token
     const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
     
-    // Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
+    // Check if artist still exists
+    const currentArtist = await Artist.findById(decoded.id);
+    if (!currentArtist) {
       return res.status(401).json({
         status: 'fail',
-        message: 'The user belonging to this token no longer exists.'
+        message: 'The artist belonging to this token no longer exists.'
       });
     }
     
     // Grant access to protected route
-    req.user = currentUser;
+    req.artist = currentArtist;
     next();
     
   } catch (error) {
@@ -67,7 +68,7 @@ exports.protect = async (req, res, next) => {
 // Restrict to admin users
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.artist.role)) {
       return res.status(403).json({
         status: 'fail',
         message: 'You do not have permission to perform this action'

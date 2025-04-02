@@ -27,33 +27,6 @@ const generateRandomString = (length = 8) => {
     .toUpperCase();
 };
 
-/**
- * Format a number to currency format
- * @param {Number} amount - Amount to format
- * @param {Number} decimals - Number of decimal places
- * @returns {String} Formatted amount
- */
-const formatCurrency = (amount, decimals = 2) => {
-  return parseFloat(amount).toFixed(decimals);
-};
-
-/**
- * Convert Wei to Ether
- * @param {String|Number} wei - Amount in wei
- * @returns {Number} Amount in Ether
- */
-const weiToEther = (wei) => {
-  return parseFloat(wei) / 1e18;
-};
-
-/**
- * Convert Ether to Wei
- * @param {Number} ether - Amount in Ether
- * @returns {String} Amount in Wei as string
- */
-const etherToWei = (ether) => {
-  return (parseFloat(ether) * 1e18).toString();
-};
 
 /**
  * Check if a date is older than specified days
@@ -80,9 +53,6 @@ const calculatePercentage = (value, percentage) => {
 module.exports = {
   generateToken,
   generateRandomString,
-  formatCurrency,
-  weiToEther,
-  etherToWei,
   isOlderThan,
   calculatePercentage
 };
