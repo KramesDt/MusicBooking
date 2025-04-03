@@ -1,5 +1,5 @@
 module.exports = {
-  mongoURI: process.env.MONGO_URI,
+  mongoURL: process.env.MONGO_URL,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiration: 3600 * 24, // 24 hours
   bcryptSalt: 10,

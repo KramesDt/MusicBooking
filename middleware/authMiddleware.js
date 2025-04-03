@@ -6,13 +6,6 @@ require('dotenv').config();
 const JWT_SECRET = process.env.JWT_SECRET ;
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
 
-// Generate JWT token
-exports.generateToken = (userId) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN
-  });
-};
-
 // Protect routes middleware
 exports.protect = async (req, res, next) => {
   try {
@@ -32,9 +25,11 @@ exports.protect = async (req, res, next) => {
     
     // Verify token
     const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
+    console.log("decoded is: ", decoded)
     
     // Check if user still exists
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findById(decoded.user.id);
+    console.log("currentUser is: ", currentUser)
     if (!currentUser) {
       return res.status(401).json({
         status: 'fail',

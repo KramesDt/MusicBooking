@@ -52,6 +52,7 @@ const login = async (req, res) => {
 
     // Generate JWT token
     const token = generateToken(user);
+    console.log("token is: ", token)
 
     // Return user data without password
     res.json({

@@ -1,39 +1,39 @@
 const express = require('express');
 const router = express.Router();
 const {
-  registerUser,
-  loginUser,
+  register,
+  login,
   updateUser,
   deleteUser
-} = require('../controllers/user.controller');
-const authMiddleware = require('../middleware/authMiddleware');
+} = require('../controllers/auth.controller.js');
+const {protect, restrictTo} = require('../middleware/authMiddleware.js');
 
 /**
  * @desc    Register a new user
  * @route   POST /api/users/register
  * @access  Public
  */
-router.post('/register', registerUser);
+router.post('/register', register);
 
 /**
  * @desc    Authenticate user & get token
  * @route   POST /api/users/login
  * @access  Public
  */
-router.post('/login', loginUser);
+router.post('/login', login);
 
 /**
  * @desc    Update user profile
  * @route   PUT /api/users/:id
  * @access  Private
  */
-router.put('/:id', authMiddleware, updateUser);
+router.put('/:id',protect ,updateUser);
 
 /**
  * @desc    Delete user
  * @route   DELETE /api/users/:id
  * @access  Private
  */
-router.delete('/:id', authMiddleware, deleteUser);
+router.delete("/:id", protect, restrictTo("admin"), deleteUser);
 
 module.exports = router;

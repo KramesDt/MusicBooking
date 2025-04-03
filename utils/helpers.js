@@ -8,8 +8,18 @@ const config = require('../config/default');
  * @returns {String} JWT token
  */
 const generateToken = (user) => {
+  console.log("user is: ", user);
+  // Ensure user object is valid
+  if (!user || !user._id) {
+    throw new Error('Invalid user object');
+  }
   return jwt.sign(
-    { user: { id: user._id } },
+    {
+      user: {
+        id: user._id,
+        role: user.role
+      }
+    },
     config.jwtSecret,
     { expiresIn: config.jwtExpiration }
   );

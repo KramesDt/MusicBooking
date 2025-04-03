@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 // Register validation schema
-const registerSchema = Joi.object({
+const registerArtistSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   phoneNo: Joi.string().pattern(/^\d{10}$/).required()
@@ -23,6 +23,14 @@ const loginSchema = Joi.object({
   password: Joi.string().required()
 });
 
+// Register validation schema
+const registerUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+  name: Joi.string().required(),
+  role: Joi.string().valid('admin', 'user').required(),
+});
+
 // Update user schema
 const updateUserSchema = Joi.object({
   fullName: Joi.string(),
@@ -39,7 +47,8 @@ const updateUserSchema = Joi.object({
 });
 
 module.exports = {
-  registerSchema,
+  registerUserSchema,
+  registerArtistSchema,
   loginSchema,
   updateUserSchema
 };

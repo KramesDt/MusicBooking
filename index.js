@@ -2,36 +2,45 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const {connectDB} = require('./config/database.js'); 
 const app = express();
+const artistRoutes = require('./routes/artist.routes.js');
+const eventRoutes = require('./routes/event.routes.js');
+const authRoutes = require('./routes/user.routes.js');
+
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(helmet()); // Set security HTTP headers
+app.use(mongoSanitize()); // Sanitize against NoSQL query injection
+app.use(cors()); // Enable CORS
+app.use(express.json({ limit: '10kb' })); // Body parser
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+connectDB()
 
 // Routes
-app.use('/api/artists', require('./routes/artistRoutes'));
-app.use('/api/events', require('./routes/eventRoutes'));
+app.use('/api/artists', artistRoutes);
+app.use('/api/events', eventRoutes);
+app.use('/api/auth', authRoutes);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Something went wrong!' });
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'Welcome to Music Booking API',
+    version: '1.0.0'
+  });
+});
 
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-// Handle port conflicts gracefully
-server.on('error', (error) => {
-  if (error.code === 'EADDRINUSE') {
-    console.error(`Port ${PORT} is already in use`);
-    console.log('Try:');
-    console.log(`1. kill-process.ps1 -port ${PORT}`);
-    console.log(`2. netstat -ano | findstr :${PORT}`);
-    console.log(`3. taskkill /PID <PID> /F`);
-  } else {
-    console.error('Server error:', error);
-  }
-});
 
 // Handle shutdown gracefully
 process.on('SIGINT', () => {

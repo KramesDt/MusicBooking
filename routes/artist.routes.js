@@ -2,38 +2,46 @@ const express = require('express');
 const router = express.Router();
 const {
   register,
-  login,
   updateArtist,
-  deleteArtist
-} = require('../controllers/auth.controller');
-const authMiddleware = require('../middleware/authMiddleware');
+  deleteArtist,
+  getAllArtists,
+  getArtistById
+} = require('../controllers/artist.controller.js');
+const {protect, restrictTo} = require('../middleware/authMiddleware.js');
 
 /**
  * @desc    Register a new artist
  * @route   POST /api/artists/register
  * @access  Public
  */
-router.post('/register', register);
+router.post('/register', protect, restrictTo("admin"), register);
 
 /**
- * @desc    Authenticate artist & get token
- * @route   POST /api/artists/login
+ * @desc    Get all artists
+ * @route   GET /api/artists
  * @access  Public
  */
-router.post('/login', login);
+router.get('/', getAllArtists);
+
+/**
+ * @desc    Get artist by ID
+ * @route   GET /api/artists/:id
+ * @access  Public
+ */
+router.get('/:id', getArtistById);
 
 /**
  * @desc    Update artist profile
  * @route   PUT /api/artists/:id
  * @access  Private
  */
-router.put('/:id', authMiddleware, updateArtist);
+router.put('/:id',protect, restrictTo("admin") , updateArtist);
 
 /**
  * @desc    Delete artist
  * @route   DELETE /api/artists/:id
  * @access  Private
  */
-router.delete('/:id', authMiddleware, deleteArtist);
+router.delete('/:id', protect, restrictTo("admin"), deleteArtist);
 
 module.exports = router;

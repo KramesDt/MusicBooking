@@ -8,14 +8,14 @@ const {
   updateEventStatus,
   deleteEvent
 } = require('../controllers/event.controller.js');
-const authMiddleware = require('../middleware/authMiddleware.js');
+const {protect, restrictTo} = require('../middleware/authMiddleware.js');
 
 /**
  * @desc    Create new event
  * @route   POST /api/events
  * @access  Private
  */
-router.post('/', authMiddleware, createEvent);
+router.post('/create', protect, restrictTo("admin"), createEvent);
 
 /**
  * @desc    Get all events
@@ -36,20 +36,20 @@ router.get('/:id', getEventById);
  * @route   PUT /api/events/:id
  * @access  Private
  */
-router.put('/:id', authMiddleware, updateEvent);
+router.put('/:id',protect, restrictTo("admin"), updateEvent);
 
 /**
  * @desc    Update event status
  * @route   PATCH /api/events/:id/status
  * @access  Private
  */
-router.patch('/:id/status', authMiddleware, updateEventStatus);
+router.patch('/:id/status' ,protect, restrictTo("admin") , updateEventStatus);
 
 /**
  * @desc    Delete event
  * @route   DELETE /api/events/:id
  * @access  Private
  */
-router.delete('/:id', authMiddleware, deleteEvent);
+router.delete('/:id',protect, restrictTo("admin"), deleteEvent);
 
 module.exports = router;
