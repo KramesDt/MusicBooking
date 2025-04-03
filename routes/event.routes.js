@@ -9,13 +9,15 @@ const {
   deleteEvent
 } = require('../controllers/event.controller.js');
 const {protect, restrictTo} = require('../middleware/authMiddleware.js');
+const validate = require('../middleware/validate.js');
+const {createEventSchema, updateEventSchema} = require('../utils/validation.js');
 
 /**
  * @desc    Create new event
  * @route   POST /api/events
  * @access  Private
  */
-router.post('/create', protect, restrictTo("admin"), createEvent);
+router.post('/create', protect, validate(createEventSchema), restrictTo("admin"), createEvent);
 
 /**
  * @desc    Get all events
@@ -36,7 +38,7 @@ router.get('/:id', getEventById);
  * @route   PUT /api/events/:id
  * @access  Private
  */
-router.put('/:id',protect, restrictTo("admin"), updateEvent);
+router.put('/:id',protect, validate(updateEventSchema), restrictTo("admin"), updateEvent);
 
 /**
  * @desc    Update event status

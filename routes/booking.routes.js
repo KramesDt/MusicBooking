@@ -5,10 +5,11 @@ const {    createBooking,
     updateBooking,
     deleteBooking} = require('../controllers/booking.controller');
 const { protect, restrictTo } = require("../middleware/authMiddleware.js");
-const { validate } = require('../middlewares/validation.middleware');
+const validate = require('../middleware/validate.js');
+const { createBookingSchema, updateBookingSchema } = require('../utils/validation.js');
 
-router.post('/create', protect, createBooking);
-router.get('/', protect, getBookings);
+router.post('/create',protect, validate(createBookingSchema),  createBooking);
+router.get('/', protect, validate(updateBookingSchema),getBookings);
 router.get('/:id', protect, getBookingById);
 router.put('/:id', protect, updateBooking);
 router.delete('/:id', protect, deleteBooking);

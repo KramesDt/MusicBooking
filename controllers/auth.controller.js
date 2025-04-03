@@ -17,7 +17,6 @@ const register = async (req, res) => {
     await user.save();
     // Generate JWT token
     const token = generateToken(user);
-    console.log("token is: ", token)
 
     // Return user data without password
     res.status(201).json({
@@ -52,8 +51,7 @@ const login = async (req, res) => {
 
     // Generate JWT token
     const token = generateToken(user);
-    console.log("token is: ", token)
-
+    
     // Return user data without password
     res.json({
       token,
@@ -64,6 +62,16 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.json(users.map(user => user.getPublicProfile()));
+    } catch (error) {
+        console.error('Get all users error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
 
 const updateUser = async (req, res) => {
     try {
@@ -109,6 +117,7 @@ const deleteUser = async(req, res) => {
 module.exports = {
     login,
     register,
+    getAllUsers,
     updateUser,
     deleteUser
 }

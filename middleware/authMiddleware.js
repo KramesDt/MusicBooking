@@ -25,11 +25,9 @@ exports.protect = async (req, res, next) => {
     
     // Verify token
     const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
-    console.log("decoded is: ", decoded)
     
     // Check if user still exists
     const currentUser = await User.findById(decoded.user.id);
-    console.log("currentUser is: ", currentUser)
     if (!currentUser) {
       return res.status(401).json({
         status: 'fail',

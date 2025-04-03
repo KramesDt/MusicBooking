@@ -51,6 +51,7 @@ const createBookingSchema = Joi.object({
   title: Joi.string().required(),
   events: Joi.array().items(Joi.string()).required(),
   price: Joi.number().required(),
+  paymentStatus: Joi.string().valid('pending', 'confirmed', 'cancelled').default('pending'),
 });
 
 // Update booking schema

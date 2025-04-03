@@ -8,13 +8,15 @@ const {
   getArtistById
 } = require('../controllers/artist.controller.js');
 const {protect, restrictTo} = require('../middleware/authMiddleware.js');
+const validate = require('../middleware/validate.js');
+const {registerArtistSchema} = require('../utils/validation.js');
 
 /**
  * @desc    Register a new artist
  * @route   POST /api/artists/register
  * @access  Public
  */
-router.post('/register', protect, restrictTo("admin"), register);
+router.post('/register', validate(registerArtistSchema), protect, restrictTo("admin"), register);
 
 /**
  * @desc    Get all artists
