@@ -9,6 +9,7 @@ const app = express();
 const artistRoutes = require('./routes/artist.routes.js');
 const eventRoutes = require('./routes/event.routes.js');
 const authRoutes = require('./routes/user.routes.js');
+const bookingRoutes = require('./routes/booking.routes.js');
 
 
 // Middleware
@@ -24,6 +25,7 @@ connectDB()
 app.use('/api/artists', artistRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

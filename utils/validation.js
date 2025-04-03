@@ -46,9 +46,41 @@ const updateUserSchema = Joi.object({
     })
 });
 
+// Create booking schema
+const createBookingSchema = Joi.object({
+  title: Joi.string().required(),
+  events: Joi.array().items(Joi.string()).required(),
+  price: Joi.number().required(),
+});
+
+// Update booking schema
+const updateBookingSchema = Joi.object({
+  title: Joi.string(),
+  events: Joi.array().items(Joi.string()),
+  price: Joi.number(),
+});
+
+//create event schema
+const createEventSchema = Joi.object({
+  title: Joi.string().required(),
+  date: Joi.date().required(),
+  location: Joi.string().required(),
+  price: Joi.number().required(),
+});
+//update event schema 
+const updateEventSchema = Joi.object({
+  title: Joi.string(),
+  date: Joi.date(),
+  location: Joi.string(),
+  price: Joi.number(),
+});
 module.exports = {
   registerUserSchema,
   registerArtistSchema,
   loginSchema,
-  updateUserSchema
+  updateUserSchema,
+  createBookingSchema,
+  updateBookingSchema,
+  createEventSchema,
+  updateEventSchema,
 };
