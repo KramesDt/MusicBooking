@@ -29,7 +29,7 @@ const registerUserSchema = Joi.object({
 
 // Update user schema
 const updateUserSchema = Joi.object({
-  fullName: Joi.string(),
+  name: Joi.string(),
   password: Joi.string().min(6),
   confirmPassword: Joi.string().valid(Joi.ref('password'))
     .when('password', {
